@@ -3432,8 +3432,15 @@ fn vs_main(@location(0) position : vec3<f32>, @location(1) uv : vec2<f32>, @loca
 
 @fragment
 fn fs_main(in : VSOut) -> @location(0) vec4<f32> {
-    var colour1 = textureSample(tex1, samp, in.uv);
-    var colour2 = textureSample(tex2, samp, in.uv);
+    let borderColor = vec4<f32>(0.0, 0.0, 0.0, 1.0);
+    let uv = in.uv;
+    var colour1 = textureSample(tex1, samp, uv);
+    var colour2 = textureSample(tex2, samp, uv);
+
+    // Check if UV is outside [0, 1] range
+    if (uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0) {
+        return borderColor;
+    }
     return select(colour1, colour2, in.texIndex > 0);
 }
 `;
