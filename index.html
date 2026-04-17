@@ -12,15 +12,15 @@
         }
 
         canvas {
-            width: 100vw;
-            height: 100vh;
+            width: 100svw;
+            height: 100svh;
             display: block;
         }
     </style>
 </head>
 
 <body>
-    <canvas id="gfx"></canvas>
+    <canvas id="gfx"> </canvas>
 
     <script type="module">
         
@@ -3303,10 +3303,10 @@ fn fs_main(in : VSOut) -> @location(0) vec4<f32> {
         function frame(t) {
             const aspect = canvas.clientWidth / canvas.clientHeight;
             
-            const origin = mat4_translation(0, .25, 0); // move centre of perspective
-            const proj = mat4_perspective(1.0, aspect, 0.1, 100);
-            const view = mat4_translation(0, 0, -50); // dist to camera
-            const scale = mat4_scale(1.5);
+            const origin = mat4_translation(0, .2, 0); // move centre of perspective
+            const proj = mat4_perspective(1.0, aspect, 0.1, 300);
+            const view = mat4_translation(0, 0, -200); // dist to camera
+            const scale = mat4_scale(6);
             const rot = mat4_rotationY(t * 0.0005); // rotation speed
             const mvp = mat4_apply(origin, proj, view, scale, rot)
 
