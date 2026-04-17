@@ -3281,16 +3281,34 @@ fn fs_main(in : VSOut) -> @location(0) vec4<f32> {
             ]);
         }
 
+        function mat4_scale(a) {
+            return new Float32Array([
+                a, 0, 0, 0,
+                0, a, 0, 0,
+                0, 0, a, 0,
+                0, 0, 0, 1
+            ]);
+        }
+
+        function mat4_apply(...matrices) {
+            let result = matrices[0];
+            for (const matrix of matrices.slice(1)) {
+                result = mat4_mul(result, matrix);
+            }
+            return result;
+        }
         ////////////////////////////////////////////////////////////////////////////////
         // RENDER LOOP
         ////////////////////////////////////////////////////////////////////////////////
         function frame(t) {
             const aspect = canvas.clientWidth / canvas.clientHeight;
+            
+            const origin = mat4_translation(0, .25, 0); // move centre of perspective
             const proj = mat4_perspective(1.0, aspect, 0.1, 100);
             const view = mat4_translation(0, 0, -50); // dist to camera
+            const scale = mat4_scale(1.5);
             const rot = mat4_rotationY(t * 0.0005); // rotation speed
-            const pv = mat4_mul(proj, view);
-            const mvp = mat4_mul(pv, rot);
+            const mvp = mat4_apply(origin, proj, view, scale, rot)
 
             device.queue.writeBuffer(uniformBuffer, 0, mvp);
 
